@@ -1,15 +1,30 @@
 "use strict";
 
-import React from "react";
-import classnames from "classnames";
-import {
-  lazyStartIndex,
-  lazyEndIndex,
-  getPreClones
-} from "./utils/innerSliderUtils";
+exports.__esModule = true;
+exports.Track = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require("classnames");
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _innerSliderUtils = require("./utils/innerSliderUtils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // given specifications/props for a slide, fetch all the classes that need to be applied to the slide
-var getSlideClasses = spec => {
+var getSlideClasses = function getSlideClasses(spec) {
   var slickActive, slickCenter, slickCloned;
   var centerOffset, index;
 
@@ -22,18 +37,13 @@ var getSlideClasses = spec => {
   if (spec.centerMode) {
     centerOffset = Math.floor(spec.slidesToShow / 2);
     slickCenter = (index - spec.currentSlide) % spec.slideCount === 0;
-    if (
-      index > spec.currentSlide - centerOffset - 1 &&
-      index <= spec.currentSlide + centerOffset
-    ) {
+    if (index > spec.currentSlide - centerOffset - 1 && index <= spec.currentSlide + centerOffset) {
       slickActive = true;
     }
   } else {
-    slickActive =
-      spec.currentSlide <= index &&
-      index < spec.currentSlide + spec.slidesToShow;
+    slickActive = spec.currentSlide <= index && index < spec.currentSlide + spec.slidesToShow;
   }
-  let slickCurrent = index === spec.currentSlide;
+  var slickCurrent = index === spec.currentSlide;
   return {
     "slick-slide": true,
     "slick-active": slickActive,
@@ -43,7 +53,7 @@ var getSlideClasses = spec => {
   };
 };
 
-var getSlideStyle = function(spec) {
+var getSlideStyle = function getSlideStyle(spec) {
   var style = {};
 
   if (spec.variableWidth === undefined || spec.variableWidth === false) {
@@ -58,44 +68,28 @@ var getSlideStyle = function(spec) {
       style.left = -spec.index * parseInt(spec.slideWidth);
     }
     style.opacity = spec.currentSlide === spec.index ? 1 : 0;
-    style.transition =
-      "opacity " +
-      spec.speed +
-      "ms " +
-      spec.cssEase +
-      ", " +
-      "visibility " +
-      spec.speed +
-      "ms " +
-      spec.cssEase;
-    style.WebkitTransition =
-      "opacity " +
-      spec.speed +
-      "ms " +
-      spec.cssEase +
-      ", " +
-      "visibility " +
-      spec.speed +
-      "ms " +
-      spec.cssEase;
+    style.transition = "opacity " + spec.speed + "ms " + spec.cssEase + ", " + "visibility " + spec.speed + "ms " + spec.cssEase;
+    style.WebkitTransition = "opacity " + spec.speed + "ms " + spec.cssEase + ", " + "visibility " + spec.speed + "ms " + spec.cssEase;
   }
 
   return style;
 };
 
-const getKey = (child, fallbackKey) => child.key || fallbackKey;
+var getKey = function getKey(child, fallbackKey) {
+  return child.key || fallbackKey;
+};
 
-var renderSlides = function(spec) {
+var renderSlides = function renderSlides(spec) {
   var key;
   var slides = [];
   var preCloneSlides = [];
   var postCloneSlides = [];
-  var childrenCount = React.Children.count(spec.children);
-  let startIndex = lazyStartIndex(spec);
-  let endIndex = lazyEndIndex(spec);
+  var childrenCount = _react2.default.Children.count(spec.children);
+  var startIndex = (0, _innerSliderUtils.lazyStartIndex)(spec);
+  var endIndex = (0, _innerSliderUtils.lazyEndIndex)(spec);
 
-  React.Children.forEach(spec.children, (elem, index) => {
-    let child;
+  _react2.default.Children.forEach(spec.children, function (elem, index) {
+    var child = void 0;
     var childOnClickOptions = {
       message: "children",
       index: index,
@@ -104,63 +98,57 @@ var renderSlides = function(spec) {
     };
 
     // in case of lazyLoad, whether or not we want to fetch the slide
-    if (
-      !spec.lazyLoad ||
-      (spec.lazyLoad && spec.lazyLoadedList.indexOf(index) >= 0)
-    ) {
+    if (!spec.lazyLoad || spec.lazyLoad && spec.lazyLoadedList.indexOf(index) >= 0) {
       child = elem;
     } else {
-      child = <div />;
+      child = _react2.default.createElement("div", null);
     }
-    var childStyle = getSlideStyle({ ...spec, index });
-    const slideClass = child.props.className || "";
-    let slideClasses = getSlideClasses({ ...spec, index });
+    var childStyle = getSlideStyle(_extends({}, spec, { index: index }));
+    var slideClass = child.props.className || "";
+    var slideClasses = getSlideClasses(_extends({}, spec, { index: index }));
     // push a cloned element of the desired slide
-    slides.push(
-      React.cloneElement(child, {
-        key: "original" + getKey(child, index),
-        "data-index": index,
-        className: classnames(slideClasses, slideClass),
-        tabIndex: "-1",
-        "aria-hidden": !slideClasses["slick-active"],
-        style: { outline: "none", ...(child.props.style || {}), ...childStyle },
-        onClick: e => {
-          child.props && child.props.onClick && child.props.onClick(e);
-          if (spec.focusOnSelect) {
-            spec.focusOnSelect(childOnClickOptions);
-          }
+    slides.push(_react2.default.cloneElement(child, {
+      key: "original" + getKey(child, index),
+      "data-index": index,
+      className: (0, _classnames2.default)(slideClasses, slideClass),
+      tabIndex: "-1",
+      "aria-hidden": !slideClasses["slick-active"],
+      style: _extends({ outline: "none" }, child.props.style || {}, childStyle, {
+        width: `calc(100% / ${spec.children.length})`
+      }),
+      onClick: function onClick(e) {
+        child.props && child.props.onClick && child.props.onClick(e);
+        if (spec.focusOnSelect) {
+          spec.focusOnSelect(childOnClickOptions);
         }
-      })
-    );
+      }
+    }));
 
     // if slide needs to be precloned or postcloned
     if (spec.infinite && spec.fade === false) {
-      let preCloneNo = childrenCount - index;
-      if (
-        preCloneNo <= getPreClones(spec) &&
-        childrenCount !== spec.slidesToShow
-      ) {
+      var preCloneNo = childrenCount - index;
+      if (preCloneNo <= (0, _innerSliderUtils.getPreClones)(spec) && childrenCount !== spec.slidesToShow) {
         key = -preCloneNo;
         if (key >= startIndex) {
           child = elem;
         }
-        slideClasses = getSlideClasses({ ...spec, index: key });
-        preCloneSlides.push(
-          React.cloneElement(child, {
-            key: "precloned" + getKey(child, key),
-            "data-index": key,
-            tabIndex: "-1",
-            className: classnames(slideClasses, slideClass),
-            "aria-hidden": !slideClasses["slick-active"],
-            style: { ...(child.props.style || {}), ...childStyle },
-            onClick: e => {
-              child.props && child.props.onClick && child.props.onClick(e);
-              if (spec.focusOnSelect) {
-                spec.focusOnSelect(childOnClickOptions);
-              }
+        slideClasses = getSlideClasses(_extends({}, spec, { index: key }));
+        preCloneSlides.push(_react2.default.cloneElement(child, {
+          key: "precloned" + getKey(child, key),
+          "data-index": key,
+          tabIndex: "-1",
+          className: (0, _classnames2.default)(slideClasses, slideClass),
+          "aria-hidden": !slideClasses["slick-active"],
+          style: _extends({}, child.props.style || {}, childStyle, {
+            width: `calc(100% / ${spec.children.length})`
+          }),
+          onClick: function onClick(e) {
+            child.props && child.props.onClick && child.props.onClick(e);
+            if (spec.focusOnSelect) {
+              spec.focusOnSelect(childOnClickOptions);
             }
-          })
-        );
+          }
+        }));
       }
 
       if (childrenCount !== spec.slidesToShow) {
@@ -168,23 +156,23 @@ var renderSlides = function(spec) {
         if (key < endIndex) {
           child = elem;
         }
-        slideClasses = getSlideClasses({ ...spec, index: key });
-        postCloneSlides.push(
-          React.cloneElement(child, {
-            key: "postcloned" + getKey(child, key),
-            "data-index": key,
-            tabIndex: "-1",
-            className: classnames(slideClasses, slideClass),
-            "aria-hidden": !slideClasses["slick-active"],
-            style: { ...(child.props.style || {}), ...childStyle },
-            onClick: e => {
-              child.props && child.props.onClick && child.props.onClick(e);
-              if (spec.focusOnSelect) {
-                spec.focusOnSelect(childOnClickOptions);
-              }
+        slideClasses = getSlideClasses(_extends({}, spec, { index: key }));
+        postCloneSlides.push(_react2.default.cloneElement(child, {
+          key: "postcloned" + getKey(child, key),
+          "data-index": key,
+          tabIndex: "-1",
+          className: (0, _classnames2.default)(slideClasses, slideClass),
+          "aria-hidden": !slideClasses["slick-active"],
+          style: _extends({}, child.props.style || {}, childStyle, {
+            width: `calc(100% / ${spec.children.length})`
+          }),
+          onClick: function onClick(e) {
+            child.props && child.props.onClick && child.props.onClick(e);
+            if (spec.focusOnSelect) {
+              spec.focusOnSelect(childOnClickOptions);
             }
-          })
-        );
+          }
+        }));
       }
     }
   });
@@ -196,19 +184,33 @@ var renderSlides = function(spec) {
   }
 };
 
-export class Track extends React.PureComponent {
-  render() {
-    const slides = renderSlides(this.props);
-    const { onMouseEnter, onMouseOver, onMouseLeave } = this.props;
-    const mouseEvents = { onMouseEnter, onMouseOver, onMouseLeave };
-    return (
-      <div
-        className="slick-track"
-        style={this.props.trackStyle}
-        {...mouseEvents}
-      >
-        {slides}
-      </div>
-    );
+var Track = exports.Track = function (_React$PureComponent) {
+  _inherits(Track, _React$PureComponent);
+
+  function Track() {
+    _classCallCheck(this, Track);
+
+    return _possibleConstructorReturn(this, _React$PureComponent.apply(this, arguments));
   }
-}
+
+  Track.prototype.render = function render() {
+    var slides = renderSlides(this.props);
+    var _props = this.props,
+        onMouseEnter = _props.onMouseEnter,
+        onMouseOver = _props.onMouseOver,
+        onMouseLeave = _props.onMouseLeave,
+        trackStyle = _props.trackStyle;
+
+    var mouseEvents = { onMouseEnter: onMouseEnter, onMouseOver: onMouseOver, onMouseLeave: onMouseLeave };
+    return _react2.default.createElement(
+      "div",
+      _extends({
+        className: "slick-track",
+        style: _extends({}, trackStyle, { width: `calc(100% * ${slides.length})` }),
+       }, mouseEvents),
+      slides
+    );
+  };
+
+  return Track;
+}(_react2.default.PureComponent);
