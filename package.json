@@ -1,7 +1,7 @@
 {
-  "name": "react-slick",
-  "version": "0.23.1",
-  "description": " React port of slick carousel",
+  "name": "react-slick-flex",
+  "version": "0.1.0",
+  "description": "Fork of react-slick",
   "main": "./lib",
   "files": ["dist", "lib"],
   "scripts": {
@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/akiran/react-slick"
+    "url": "https://github.com/ckbedwell/react-slick-flex"
   },
   "keywords": [
     "slick",
@@ -99,7 +99,7 @@
   "lint-staged": {
     "*.{js,json,md}": ["prettier --write", "git add"]
   },
-  "npmName": "react-slick",
+  "npmName": "react-slick-flex",
   "npmFileMap": [
     {
       "basePath": "/dist/",
